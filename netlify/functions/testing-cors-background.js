@@ -3,7 +3,7 @@
 export const handler = async (event, context) => {
     console.log("✅ Background function triggered!");
   
-    // You can receive and parse body if needed
+    // Parse incoming request body if available
     let body = {};
     try {
       if (event.body) {
@@ -13,11 +13,14 @@ export const handler = async (event, context) => {
       console.error("Error parsing body:", err);
     }
   
-    // Example simple logic
+    // Prepare a message
     const message = `Hello from Background Function! Received trigger: ${body.trigger || "no trigger"}`;
   
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json", // <-- 🔥 ADD THIS!!!
+      },
       body: JSON.stringify({
         status: "success",
         message,
