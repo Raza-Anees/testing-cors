@@ -17,7 +17,7 @@ export const handler = async (event, context) => {
 
   try {
     // ✅ Fetch background function
-    const backgroundResponse = await fetch('https://testingcorss.netlify.app//.netlify/functions/testing-cors-background', {
+    const backgroundResponse = await fetch('https://testingcorss.netlify.app/api/testing-cors-background', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
