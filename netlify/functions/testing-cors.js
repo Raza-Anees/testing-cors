@@ -1,7 +1,6 @@
-import fetch from 'node-fetch'; // import fetch
+import fetch from 'node-fetch';
 
 export const handler = async (event, context) => {
-  // Setup basic CORS headers
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -17,38 +16,49 @@ export const handler = async (event, context) => {
   }
 
   try {
-    // ✅ Make a POST request to your background function
-    const response = await fetch('https://testingcorss.netlify.app/.netlify/functions/YOUR_BACKGROUND_FUNCTION', {
+    // ✅ Fetch background function
+    const backgroundResponse = await fetch('https://testingcorss.netlify.app//.netlify/functions/testing-cors-background', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ trigger: "from-main-function" }), // you can send some data
+      body: JSON.stringify({ trigger: "simpleFunctionCall" }),
     });
 
-    // ✅ Parse the response safely
-    const result = await response.json();
+    // ✅ Check if response was ok
+    if (!backgroundResponse.ok) {
+      const textError = await backgroundResponse.text(); // Get HTML error
+      console.error("Background function error:", textError);
+      throw new Error(`Background function failed with status ${backgroundResponse.status}`);
+    }
 
-    // ✅ Log background function result
-    console.log('Background Function Result:', result);
+    const contentType = backgroundResponse.headers.get('content-type');
 
-    // ✅ Return success response
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        message: 'Main function executed successfully',
-        backgroundResponse: result,
-      }),
-    };
+    if (contentType && contentType.includes('application/json')) {
+      const result = await backgroundResponse.json();
+      console.log('✅ Background function result:', result);
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          message: 'Successfully called background function',
+          backgroundResult: result,
+        }),
+      };
+    } else {
+      const textResult = await backgroundResponse.text();
+      console.error("Background function returned non-JSON:", textResult);
+      throw new Error('Background function did not return JSON');
+    }
 
   } catch (error) {
-    console.error('Error calling background function:', error);
+    console.error('❌ Error calling background function:', error);
 
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Failed to call background function' }),
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
