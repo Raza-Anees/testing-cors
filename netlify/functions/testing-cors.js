@@ -28,8 +28,7 @@ export const handler = async (event, context) => {
     });
 
     // You don't have to wait for full background completion.
-    const backgroundResult = await backgroundResponse.json();
-    console.log("✅ Background function triggered!", backgroundResult.testing);
+    console.log("Background function triggered!", backgroundResponse.test);
 
     return {
       statusCode: 200,
