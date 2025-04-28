@@ -35,6 +35,7 @@ export const handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         message: "Background function started successfully!",
+        res:backgroundResponse.test
       }),
     };
 
