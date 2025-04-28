@@ -16,11 +16,25 @@ export const handler = async (event, context) => {
     // Prepare a message
     const message = `Hello from Background Function! Received trigger: ${body.trigger || "no trigger"}`;
   
+    const headers = {
+      "Access-Control-Allow-Origin": "*", // 🔥 Allow all origins (or specify domain later)
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow these methods
+      "Access-Control-Allow-Headers": "Content-Type, Authorization", // Allow these headers
+      "Content-Type": "application/json", // 🔥 Important for returning JSON
+    };
+  
+    if (event.httpMethod === "OPTIONS") {
+      // Handle CORS Preflight Request
+      return {
+        statusCode: 204,
+        headers,
+        body: null,
+      };
+    }
+  
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json", // <-- 🔥 ADD THIS!!!
-      },
+      headers,
       body: JSON.stringify({
         status: "success",
         message,
