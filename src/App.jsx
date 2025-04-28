@@ -4,7 +4,7 @@ function App() {
   const [apiData, setApiData] = useState(null);
 
   useEffect(() => {
-    fetch('https://testingcorss.netlify.app/.netlify/functions/testing-cors', {
+    fetch('https://testingcorss.netlify.app/api/testing-cors', {
       method: 'POST',
     })
     .then(response => response.json())
