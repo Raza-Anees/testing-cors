@@ -1,106 +1,47 @@
-// import { use, useRef, useState,useMemo } from 'react'
-
-
-// function App() {
-// //   const inputElem=useRef()
-// // const getval =()=>{
-// //   console.log(inputElem.current.value)
-// // }
-
-// const [number,setNumber]=useState(0)
-// const [counter,setCounter]=useState(0)
-
-// const cubeNumber=(num)=>{
-// console.log("value is calculated")
-// return Math.pow(num,3)
-
-
-// }
-// const result =useMemo(()=>cubeNumber(number),[number])
-//   return (
-//     <>
-//     <input type="number" value={number} onChange={(e)=>(setNumber(e.target.value))}  />
-//     <h1>cube is {result}</h1>
-//     <button onClick={()=>setCounter(counter+1)}>counter ++</button>
-//     <h1>counter value {counter}</h1>
-// {/* <input type="text" ref={inputElem} />
-// <button onClick={getval}>click me</button> */}
-//     </>
-//   )
-// }
-
-// export default App
-
-
-// import React, { useState, useRef, useMemo } from 'react';
-
-// function App() {
-//   const [number, setNumber] = useState(0);
-//   const renderCount = useRef(0);
-
-//   const squaredNumber = useMemo(() => {
-//     console.log('Calculating square...');
-//     return number * number;
-//   }, [number]);
-
-//   renderCount.current++; // Track renders without causing re-renders
-
-//   return (
-//     <div>
-//       <input
-//         type="number"
-//         value={number}
-//         onChange={(e) => setNumber(parseInt(e.target.value))}
-//       />
-//       <p>Number: {number}</p>
-//       <p>Squared Number: {squaredNumber}</p>
-//       <p>Renders: {renderCount.current}</p>
-//     </div>
-//   );
-// }
-// export default App
-
-import React, { useEffect } from 'react'
-import { BrowserRouter,Route,Routes } from 'react-router-dom'
-// import Home from './components/Home'
-// import Projects from './components/Projects'
-// import About from './components/About'
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [backgroundResult, setBackgroundResult] = useState(null); // 👈 Store result here
+  const [error, setError] = useState(null);
 
-  useEffect(()=>{
-    const process=fetch('https://testingcorss.netlify.app/api/testing-cors', {
-  method: 'POST',
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error:', error));
-//     fetch('https://testingcorss.netlify.app/.netlify/functions/testing-cors-background', {
-//   method: 'POST',
-// })
-// .then(response => response.json())
-// .then(data => console.log(data))
-// .catch(error => console.error('Error:', error));
-  },[])
+  useEffect(() => {
+    fetch('https://testingcorss.netlify.app/api/testing-cors', {
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("✅ Data received:", data);
+        if (data.backgroundResult) {
+          setBackgroundResult(data.backgroundResult); // 👈 Set background result
+        } else {
+          setError('No background result received');
+        }
+      })
+      .catch(error => {
+        console.error('❌ Error:', error);
+        setError('Error calling background function');
+      });
+  }, []);
+
   return (
-    <>
-    <div>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>Testing Netlify Background Function</h1>
 
-    testing
+      {backgroundResult ? (
+        <div>
+          <h2>Background Result:</h2>
+          <pre>{JSON.stringify(backgroundResult, null, 2)}</pre> {/* Pretty print */}
+        </div>
+      ) : error ? (
+        <div style={{ color: "red" }}>
+          <h2>Error:</h2>
+          <p>{error}</p>
+        </div>
+      ) : (
+        <p>Loading background function...</p>
+      )}
     </div>
-    
-    </>
-//     <div>
-// <BrowserRouter>
-// <Routes>
-//   <Route path='/' Component={Home} />
-//   <Route path='/projects' Component={Projects} />
-//   <Route path='/about' Component={About} />
-// </Routes>
-// </BrowserRouter>
-
-//     </div>
-  )
+  );
 }
 
-export default App
+export default App;
