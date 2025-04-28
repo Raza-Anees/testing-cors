@@ -21,7 +21,7 @@ export const handler = async (event, context) => {
 
   try {
     // 🔥 Trigger the background function internally
-    const backgroundResponse = await fetch('https://testingcorss.netlify.app//.netlify/functions/sample-background', {
+    const backgroundResponse = await fetch('https://testingcorss.netlify.app/.netlify/functions/sample-background', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ trigger: "StartBackgroundJob" }),
