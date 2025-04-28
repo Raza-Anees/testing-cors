@@ -27,10 +27,13 @@ export const handler = async (event, context) => {
     });
 
     const result = await backgroundResponse.json();
+    console.log("Background function result:", result);
+    console.log("Background function status:", backgroundResponse);
 
     return {
       statusCode: 200,
       headers,
+      result,
       body: JSON.stringify({
         message: "Hello from Netlify Functions!",
         backgroundResult: result, // return background function's result

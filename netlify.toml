@@ -7,7 +7,7 @@
   node_bundler = "esbuild"   # needed for modern Node.js function bundling
 
 # Configure Background Functions (optional overrides)
-[functions."testing-cors-background-background"]
+[functions."testing-cors-background"]
   timeout = 900 # 900 seconds = 15 minutes max for background functions
   memory = 1024 # (optional) increase memory if needed
 
