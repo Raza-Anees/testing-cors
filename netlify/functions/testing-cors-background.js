@@ -1,14 +1,28 @@
-export const handler = async (event, context) => {
+// File: netlify/functions/sample-background.js
 
-    const headers = {
-        "Access-Control-Allow-Origin": "*", // Allow all origins
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", // Allow methods
-        "Access-Control-Allow-Headers": "Content-Type, Authorization", // Allow headers
+export const handler = async (event, context) => {
+    console.log("✅ Background function triggered!");
+  
+    // You can receive and parse body if needed
+    let body = {};
+    try {
+      if (event.body) {
+        body = JSON.parse(event.body);
       }
+    } catch (err) {
+      console.error("Error parsing body:", err);
+    }
+  
+    // Example simple logic
+    const message = `Hello from Background Function! Received trigger: ${body.trigger || "no trigger"}`;
+  
     return {
       statusCode: 200,
-      headers,
-      body: JSON.stringify({ message: "Hello from Netlify Background Functions!" }),
+      body: JSON.stringify({
+        status: "success",
+        message,
+        timestamp: new Date().toISOString(),
+      }),
     };
   };
   
