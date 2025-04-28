@@ -1,2 +1,18 @@
+[build]
+  command = "npm run build" # your build command
+  publish = "dist"          # your frontend build output directory
+  functions = "netlify/functions" # path to serverless functions
+
 [functions]
-  directory = "netlify/functions"
+  node_bundler = "esbuild"   # needed for modern Node.js function bundling
+
+# Configure Background Functions (optional overrides)
+[functions."testing-cors-background-background"]
+  timeout = 900 # 900 seconds = 15 minutes max for background functions
+  memory = 1024 # (optional) increase memory if needed
+
+# Redirect frontend API calls to your serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
