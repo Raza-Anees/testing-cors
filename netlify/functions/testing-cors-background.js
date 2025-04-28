@@ -7,7 +7,7 @@ export const handler = async (event, context) => {
       }
     return {
       statusCode: 200,
-      headers
+      headers,
       body: JSON.stringify({ message: "Hello from Netlify Background Functions!" }),
     };
   };
