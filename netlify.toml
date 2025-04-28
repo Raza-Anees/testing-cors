@@ -8,8 +8,8 @@
 
 # Configure Background Functions (optional overrides)
 [functions."testing-cors-background"]
-  timeout = 900 # 900 seconds = 15 minutes max for background functions
-  memory = 1024 # (optional) increase memory if needed
+  timeout = "15m" # Explicitly set the longer timeout (up to 15 minutes)
+  memory = 1024 # Can adjust memory if needed
 
 # Redirect frontend API calls to your serverless functions
 [[redirects]]
