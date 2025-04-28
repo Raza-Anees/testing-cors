@@ -69,7 +69,7 @@ import { BrowserRouter,Route,Routes } from 'react-router-dom'
 function App() {
 
   useEffect(()=>{
-    fetch('http://localhost:8080/.netlify/functions/test-cors', {
+    fetch('http://localhost:8080/.netlify/functions/test-cors-background', {
   method: 'POST',
 })
 .then(response => response.json())
