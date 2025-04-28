@@ -1,13 +1,17 @@
-import fetch from 'node-fetch';
+// netlify/functions/trigger-background.js
+
+import fetch from 'node-fetch'; // make sure installed
 
 export const handler = async (event, context) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
   };
 
   if (event.httpMethod === "OPTIONS") {
+    // CORS Preflight
     return {
       statusCode: 204,
       headers,
@@ -16,49 +20,30 @@ export const handler = async (event, context) => {
   }
 
   try {
-    // ✅ Fetch background function
-    const backgroundResponse = await fetch('https://testingcorss.netlify.app/api/testing-cors-background', {
+    // 🔥 Trigger the background function internally
+    const backgroundResponse = await fetch('https://testingcorss.netlify.app//.netlify/functions/sample-background', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ trigger: "simpleFunctionCall" }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trigger: "StartBackgroundJob" }),
     });
 
-    // ✅ Check if response was ok
-    if (!backgroundResponse.ok) {
-      const textError = await backgroundResponse.text(); // Get HTML error
-      console.error("Background function error:", textError);
-      throw new Error(`Background function failed with status ${backgroundResponse.status}`);
-    }
+    // You don't have to wait for full background completion.
+    console.log("Background function triggered!");
 
-    const contentType = backgroundResponse.headers.get('content-type');
-
-    if (contentType && contentType.includes('application/json')) {
-      const result = await backgroundResponse.json();
-      console.log('✅ Background function result:', result);
-
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          message: 'Successfully called background function',
-          backgroundResult: result,
-        }),
-      };
-    } else {
-      const textResult = await backgroundResponse.text();
-      console.error("Background function returned non-JSON:", textResult);
-      throw new Error('Background function did not return JSON');
-    }
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        message: "Background function started successfully!",
+      }),
+    };
 
   } catch (error) {
-    console.error('❌ Error calling background function:', error);
-
+    console.error("Error triggering background function:", error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ error: "Failed to trigger background function" }),
     };
   }
 };
