@@ -11,9 +11,6 @@ function App() {
       
   method: 'POST',
   headers: { 
-    "Access-Control-Allow-Origin": "*", // Allow all origins for now
-    "Access-Control-Allow-Headers": "Content-Type, Origin, Accept",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Content-Type": "application/json",
 
   },
