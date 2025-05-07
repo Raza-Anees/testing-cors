@@ -9,7 +9,7 @@ export const handler = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        testing:test,
+       
         status: "success",
         message: "Background job completed!",
         timestamp: new Date().toISOString(),
